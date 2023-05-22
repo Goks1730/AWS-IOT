@@ -152,10 +152,18 @@ The 'server hello' message: In reply to the client hello message, the server sen
 
 <img width="925" alt="server key exchange" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/15bb34ff-f91b-486d-854a-10f6236a7607">
 
-
+```javascript
 During the ClientKeyExchange step, the client extracts the public key from the verified certificate and generates a new random sequence called the premaster secret. The premaster secret is then encrypted using the extracted public key and is sent to the server. Te SSL/TLS server decrypts the premaster secret using its private key.
 
 Both the client and the server now use the premaster secret to configure a shared secret key. Next, the client sends an encrypted “finished” message using the shared secret key. This message says that the client’s part of the handshake is complete.
+```
+<img width="926" alt="process" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/75f53cb8-c39f-4ffc-8733-ac02759d612b">
+<img width="929" alt="handshake" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/24c67b74-2494-4d63-a68b-9eb7c9c52d0c">
+
+```javascript
+Step 8: Finally, an encrypted “finished” message is sent back to the client from the server using the previously agreed shared secret key, which indicates the end of the server’s side of the handshake.
+Step 9: Once the SSL/TLS handshake and negotiation is done, the server and the client communication continues, i.e., they begin to share files and messages using the session keys (symmetric encryption).
+```
 
 
 
