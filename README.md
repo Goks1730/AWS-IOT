@@ -164,6 +164,8 @@ Both the client and the server now use the premaster secret to configure a share
 Step 8: Finally, an encrypted “finished” message is sent back to the client from the server using the previously agreed shared secret key, which indicates the end of the server’s side of the handshake.
 Step 9: Once the SSL/TLS handshake and negotiation is done, the server and the client communication continues, i.e., they begin to share files and messages using the session keys (symmetric encryption).
 ```
+<img width="721" alt="ency data" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/ddcb2d9b-4362-4562-b243-1dadd41e3b9d">
+<img width="888" alt="done" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/47e39362-f48b-4855-b5c3-f3bdf3f1bd74">
 
 
 
