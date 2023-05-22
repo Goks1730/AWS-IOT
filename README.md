@@ -72,6 +72,34 @@ Defining the endpoint, private key and the certificate.
  * #define CLIENT_PRIVATE_KEY_PATH    "...insert here..."
 
 ```
+```javascript
+/**
+     * @brief Filepaths to certificates and private key that are used when
+     * performing the TLS handshake.
+     *
+     * @note These strings must be NULL-terminated because the OpenSSL API requires them to be.
+     */
+    const char * pRootCaPath;     /**< @brief Filepath string to the trusted server root CA. */
+    const char * pClientCertPath; /**< @brief Filepath string to the client certificate. */
+    const char * pPrivateKeyPath; /**< @brief Filepath string to the client certificate's private key. */
+} OpensslCredentials_t;
+```
+
+
+```http
+   /* Initialize credentials for establishing TLS session. */
+```
+
+| Parameter | Description                |
+| :-------- | :------------------------- |
+| `ROOT_CA_CERT_PATH` |  opensslCredentials.pRootCaPath = ROOT_CA_CERT_PATH; |
+| `CLIENT_CERT_PATH` |  opensslCredentials.pClientCertPath = CLIENT_CERT_PATH; |
+| `CLIENT_PRIVATE_KEY_PATH` |  opensslCredentials.pPrivateKeyPath = CLIENT_PRIVATE_KEY_PATH; |
+| `AWS_IOT_ENDPOINT` |  opensslCredentials.sniHostName = AWS_IOT_ENDPOINT;|
+
+
+
+
 
 ## mqtt_demo_mutual_auth\mqtt_demo_mutual_auth.c
 
