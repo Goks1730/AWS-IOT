@@ -136,6 +136,20 @@ Defining the endpoint, private key and the certificate.
 ```
 ## handshake   
 
+## Wireshark is a network protocol analyzer, or an application that captures packets from a network connection, such as from your computer to your home office or the internet. 
+
+```javascript
+The 'client hello' message: The client initiates the handshake by sending a "hello" message to the server. The message will include which TLS version the client supports, the cipher suites supported, and a string of random bytes known as the "client random."
+```
+<img width="926" alt="client hello" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/202a0ae7-1d06-44b0-9622-bde2c401c19e">
+
+The 'server hello' message: In reply to the client hello message, the server sends a message containing the server's SSL certificate, the server's chosen cipher suite, and the "server random
+
+
+
+
+
+
 ```javascript
     /**
      * @brief Filepaths to certificates and private key that are used when
