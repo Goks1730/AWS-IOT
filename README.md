@@ -150,6 +150,7 @@ The 'server hello' message: In reply to the client hello message, the server sen
 
 ## The client performs authentication by contacting the server’s certificate authority (CA) to validate the web server’s digital certificate. This confirms the authenticity of the web server, thus, establishing trust.
 
+<img width="925" alt="server key exchange" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/15bb34ff-f91b-486d-854a-10f6236a7607">
 
 
 During the ClientKeyExchange step, the client extracts the public key from the verified certificate and generates a new random sequence called the premaster secret. The premaster secret is then encrypted using the extracted public key and is sent to the server.
