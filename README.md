@@ -143,8 +143,16 @@ The 'client hello' message: The client initiates the handshake by sending a "hel
 ```
 <img width="926" alt="client hello" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/202a0ae7-1d06-44b0-9622-bde2c401c19e">
 
+```javascript
 The 'server hello' message: In reply to the client hello message, the server sends a message containing the server's SSL certificate, the server's chosen cipher suite, and the "server random
+```
+<img width="936" alt="server hello" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/e9d89eda-3ac1-4295-9320-1e484bdb7850">
 
+## The client performs authentication by contacting the server’s certificate authority (CA) to validate the web server’s digital certificate. This confirms the authenticity of the web server, thus, establishing trust.
+
+
+
+During the ClientKeyExchange step, the client extracts the public key from the verified certificate and generates a new random sequence called the premaster secret. The premaster secret is then encrypted using the extracted public key and is sent to the server.
 
 
 
