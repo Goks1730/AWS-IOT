@@ -196,8 +196,172 @@ Step 9: Once the SSL/TLS handshake and negotiation is done, the server and the c
 <img width="888" alt="done" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/47e39362-f48b-4855-b5c3-f3bdf3f1bd74">
 
 
+## certificate signing request (CSR)
+```javascript
 
+/**
+ * @brief Creates the request payload to be published to the
+ * CreateCertificateFromCsr API in order to request a certificate from AWS IoT
+ * for the included Certificate Signing Request (CSR).
+ *
+ * @param[in] pBuffer Buffer into which to write the publish request payload.
+ * @param[in] bufferLength Length of #pBuffer.
+ * @param[in] pCsr The CSR to include in the request payload.
+ * @param[in] csrLength The length of #pCsr.
+ * @param[out] pOutLengthWritten The length of the publish request payload.
+ */
+bool generateCsrRequest( uint8_t * pBuffer,
+                         size_t bufferLength,
+                         const char * pCsr,
+                         size_t csrLength,
+                         size_t * pOutLengthWritten );
+                         
+  * This demo provisions a device certificate using the provisioning by claim
+ * workflow with a Certificate Signing Request (CSR). The demo connects to AWS
+ * IoT Core using provided claim credentials (whose certificate needs to be
+ * registered with IoT Core before running this demo), subscribes to the
+ * CreateCertificateFromCsr topics, and obtains a certificate. It then
+ * subscribes to the RegisterThing topics and activates the certificate and
+ * obtains a Thing using the provisioning template. Finally, it reconnects to
+ * AWS IoT Core using the new credentials.
+ */
+ 
+      /**** Call the CreateCertificateFromCsr API ***************************/
 
+        /* We use the CreateCertificatefromCsr API to obtain a client certificate
+         * for a key on the device by means of sending a certificate signing
+         * request (CSR). */
+        if( status == true )
+        {
+            /* Subscribe to the CreateCertificateFromCsr accepted and rejected
+             * topics. In this demo we use CBOR encoding for the payloads,
+             * so we use the CBOR variants of the topics. */
+            status = subscribeToCsrResponseTopics();
+        }
+
+        if( status == true )
+        {
+            /* Create a new key and CSR. */
+            status = generateKeyAndCsr( p11Session,
+                                        pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
+                                        pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
+                                        csr,
+                                        CSR_BUFFER_LENGTH,
+                                        &csrLength );
+        }
+
+        if( status == true )
+        {
+            /* Create the request payload containing the CSR to publish to the
+             * CreateCertificateFromCsr APIs. */
+            status = generateCsrRequest( payloadBuffer,
+                                         NETWORK_BUFFER_SIZE,
+                                         csr,
+                                         csrLength,
+                                         &payloadLength );
+        }
+
+        if( status == true )
+        {
+            /* Publish the CSR to the CreateCertificatefromCsr API. */
+            status = PublishToTopic( FP_CBOR_CREATE_CERT_PUBLISH_TOPIC,
+                                     FP_CBOR_CREATE_CERT_PUBLISH_LENGTH,
+                                     ( char * ) payloadBuffer,
+                                     payloadLength );
+
+            if( status == false )
+            {
+                LogError( ( "Failed to publish to fleet provisioning topic: %.*s.",
+                            FP_CBOR_CREATE_CERT_PUBLISH_LENGTH,
+                            FP_CBOR_CREATE_CERT_PUBLISH_TOPIC ) );
+            }
+        }
+/**
+ * @brief MbedTLS callback for signing using the provisioned private key. Used for
+ * signing the CSR.
+ *
+ * @param[in] pContext Unused.
+ * @param[in] mdAlg Unused.
+ * @param[in] pHash Data to sign.
+ * @param[in] hashLen Length of #pHash.
+ * @param[out] pSig The signature
+ * @param[out] pSigLen The length of the signature.
+ * @param[in] pRng Unused.
+ * @param[in] pRngContext Unused.
+ */
+static int32_t privateKeySigningCallback( void * pContext,
+                                          mbedtls_md_type_t mdAlg,
+                                          const unsigned char * pHash,
+                                          size_t hashLen,
+                                          unsigned char * pSig,
+                                          size_t * pSigLen,
+                                          int ( * pRng )( void *, unsigned char *, size_t ),
+                                          void * pRngContext );
+
+static int32_t privateKeySigningCallback( void * pContext,
+                                          mbedtls_md_type_t mdAlg,
+                                          const unsigned char * pHash,
+                                          size_t hashLen,
+                                          unsigned char * pSig,
+                                          size_t * pSigLen,
+                                          int ( * pRng )( void *, unsigned char *, size_t ),
+                                          void * pRngContext )
+ /**
+ * @brief Generate a new public-private key pair in the PKCS #11 module, and
+ * generate a certificate signing request (CSR) for them.
+ *
+ * This device-generated private key and CSR can be used with the
+ * CreateCertificateFromCsr API of the the Fleet Provisioning feature of AWS IoT
+ * Core in order to provision a unique client certificate.
+ *
+ * @param[in] p11Session The PKCS #11 session to use.
+ * @param[in] pPrivKeyLabel PKCS #11 label for the private key.
+ * @param[in] pPubKeyLabel PKCS #11 label for the public key.
+ * @param[out] pCsrBuffer The buffer to write the CSR to.
+ * @param[in] csrBufferLength Length of #pCsrBuffer.
+ * @param[out] pOutCsrLength The length of the written CSR.
+ *
+ * @return True on success.
+ */
+bool generateKeyAndCsr( CK_SESSION_HANDLE p11Session,
+                        const char * pPrivKeyLabel,
+                        const char * pPubKeyLabel,
+                        char * pCsrBuffer,
+                        size_t csrBufferLength,
+                        size_t * pOutCsrLength );
+
+/**
+ * @brief This function details how to use the PKCS #11 "Sign and Verify" functions to
+ * create and interact with digital signatures.
+ * The functions described are all defined in
+ * https://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-os.html
+ * Please consult the standard for more information regarding these functions.
+ *
+ * The standard has grouped the functions presented in this demo as:
+ * Object Management Functions
+ * Signing and MACing Functions
+ */
+CK_RV PKCS11SignVerifyDemo( void )
+
+/* Signing variables. */
+    /* The ECDSA mechanism will be used to sign the message digest. */
+    CK_MECHANISM mechanism = { CKM_ECDSA, NULL, 0 };
+    /* Initializes the sign operation and sets what mechanism will be used
+     * for signing the message digest. Specify what object handle to use for this
+     * operation, in this case the private key object handle. */
+    if( result == CKR_OK )
+    {
+        LogInfo( ( "Signing known message: %s",
+                   ( char * ) knownMessage ) );
+
+        result = functionList->C_SignInit( session,
+                                           &mechanism,
+                                           privateKeyHandle );
+    }
+    
+    
+
+```
 
 
 
