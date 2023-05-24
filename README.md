@@ -298,14 +298,7 @@ static int32_t privateKeySigningCallback( void * pContext,
                                           int ( * pRng )( void *, unsigned char *, size_t ),
                                           void * pRngContext );
 
-static int32_t privateKeySigningCallback( void * pContext,
-                                          mbedtls_md_type_t mdAlg,
-                                          const unsigned char * pHash,
-                                          size_t hashLen,
-                                          unsigned char * pSig,
-                                          size_t * pSigLen,
-                                          int ( * pRng )( void *, unsigned char *, size_t ),
-                                          void * pRngContext )
+
  /**
  * @brief Generate a new public-private key pair in the PKCS #11 module, and
  * generate a certificate signing request (CSR) for them.
@@ -343,6 +336,10 @@ bool generateKeyAndCsr( CK_SESSION_HANDLE p11Session,
  */
 CK_RV PKCS11SignVerifyDemo( void )
 
+ /* Signing variables. */
+    /* The ECDSA mechanism will be used to sign the message digest. */
+    CK_MECHANISM mechanism = { CKM_ECDSA, NULL, 0 };
+
 /* Signing variables. */
     /* The ECDSA mechanism will be used to sign the message digest. */
     CK_MECHANISM mechanism = { CKM_ECDSA, NULL, 0 };
@@ -358,6 +355,59 @@ CK_RV PKCS11SignVerifyDemo( void )
                                            &mechanism,
                                            privateKeyHandle );
     }
+    
+    /********************************* Verify **********************************/
+
+    /* Verify the signature created by C_Sign. First we will verify that the
+     * same Cryptoki library was able to trust itself.
+     *
+     * C_VerifyInit will begin the verify operation, by specifying what mechanism
+     * to use (CKM_ECDSA, the same as the sign operation) and then specifying
+     * which public key handle to use.
+     */
+    if( result == CKR_OK )
+    {
+        result = functionList->C_VerifyInit( session,
+                                             &mechanism,
+                                             publicKeyHandle );
+    
+    *************************** ECDSA Capabilities ***************************/
+    if( result == CKR_OK )
+    {/
+        result = functionList->C_GetMechanismInfo( slotId[ 0 ],
+                                                   CKM_ECDSA,
+                                                   &MechanismInfo );
+
+        if( 0 != ( CKF_SIGN & MechanismInfo.flags ) )
+        {
+            LogInfo( ( "This Cryptoki library supports signing messages with"
+                       " ECDSA private keys." ) );
+        }
+        else
+        {
+            LogInfo( ( "This Cryptoki library does not support signing messages"
+                       " with ECDSA private keys." ) );
+        }
+
+        if( 0 != ( CKF_VERIFY & MechanismInfo.flags ) )
+        {
+            LogInfo( ( "This Cryptoki library supports verifying messages with"
+                       " ECDSA public keys." ) );
+        }
+        else
+        {
+            LogInfo( ( "This Cryptoki library does not support verifying"
+                       " messages with ECDSA public keys." ) );
+        }
+    }
+    
+   
+    | Parameter | Description                |
+| :-------- | :------------------------- |
+| `Cryptoki` |  API to sign messages | |API|
+| Public Key Cryptography Standards. |
+| 'PKCS #11` |  Signing And Verifying A Signature | |Which specifies an API, called Cryptoki|
+    
     
     
 
