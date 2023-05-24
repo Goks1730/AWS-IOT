@@ -1,3 +1,65 @@
+
+## AWS IoT Device SDK for Embedded C
+
+Step1: Install the AWS IoT Device SDK for Embedded C
+
+Download the AWS IoT Device SDK for Embedded C to your device from GitHub
+```bash
+  git clone https://github.com/aws/aws-iot-device-sdk-embedded-c.git --recurse-submodules
+```
+Install OpenSSL version 1.1.0 or later. The OpenSSL development libraries are usually called "libssl-dev" or "openssl-devel" when installed through a package manager.
+
+```bash
+sudo apt-get install libssl-dev
+```
+Step 2: Configure the sample app
+
+You must configure the sample with your personal AWS IoT Core endpoint, private key, certificate, and root CA certificate. Navigate to the aws-iot-device-sdk-embedded-c/demos/mqtt/mqtt_demo_mutual_auth directory.
+
+```bash
+// Get from demo_config.h
+// =================================================
+#define AWS_IOT_ENDPOINT               "my-endpoint-ats.iot.us-east-1.amazonaws.com"
+#define AWS_MQTT_PORT                  8883
+#define CLIENT_IDENTIFIER              "testclient"
+#define ROOT_CA_CERT_PATH              "certificates/AmazonRootCA1.crt"
+#define CLIENT_CERT_PATH               "certificates/my-device-cert.pem.crt"
+#define CLIENT_PRIVATE_KEY_PATH        "certificates/my-device-private-key.pem.key"
+// ================================================= 
+```
+
+Step3: Build and run the sample application
+To run the AWS IoT Device SDK for Embedded C sample applications
+
+Navigate to aws-iot-device-sdk-embedded-c and create a build directory.
+
+```bash
+mkdir build && cd build
+```
+Step4: Enter the following CMake command to generate the Makefiles needed to build.
+
+```bash
+cmake ..  
+```
+Step5: Enter the following command to build the executable app file.
+
+```bash
+make
+```
+Step6: Run the mqtt_demo_mutual_auth app with this command.
+
+```bash
+cd bin
+./mqtt_demo_mutual_auth 
+```
+
+
+
+
+
+
+
+
 # AWS-IOT
 
 
