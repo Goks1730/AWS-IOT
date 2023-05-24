@@ -238,6 +238,59 @@ Defining the endpoint, private key and the certificate.
 #endif /* ifndef CLIENT_USERNAME */
 ```
 ## connectToServer
+http
+/**
+ * @brief Path of the file containing the client's private key.
+ *
+ * Refer to the AWS documentation below for details regarding client
+ * authentication.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
+ *
+ * @note This private key should be PEM-encoded.
+ *
+ * #define CLIENT_PRIVATE_KEY_PATH    "...insert here..."
+ */
+
+/* Initialize reconnect attempts and interval */
+    BackoffAlgorithm_InitializeParams( &reconnectParams,
+                                       CONNECTION_RETRY_BACKOFF_BASE_MS,
+                                       CONNECTION_RETRY_MAX_BACKOFF_DELAY_MS,
+                                       CONNECTION_RETRY_MAX_ATTEMPTS );
+
+    /* Attempt to connect to HTTP server. If connection fails, retry after
+     * a timeout. Timeout value will exponentially increase until maximum
+     * attempts are reached. */
+    do
+    {
+        returnStatus = connectFunction( pNetworkContext );
+
+        if( returnStatus != EXIT_SUCCESS )
+        {
+            /* Generate a random number and get back-off value (in milliseconds) for the next connection retry. */
+            backoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &reconnectParams, generateRandomNumber(), &nextRetryBackOff );
+
+            if( backoffAlgStatus == BackoffAlgorithmSuccess )
+            {
+                LogWarn( ( "Connection to the HTTP server failed. Retrying "
+                           "connection after %hu ms backoff.",
+                           ( unsigned short ) nextRetryBackOff ) );
+                Clock_SleepMs( nextRetryBackOff );
+            }
+            else
+            {
+                LogError( ( "Connection to the HTTP server failed, all attempts exhausted." ) );
+            }
+        }
+    } while( ( returnStatus == EXIT_FAILURE ) && ( backoffAlgStatus == BackoffAlgorithmSuccess ) );
+
+    if( returnStatus == EXIT_FAILURE )
+    {
+        LogError( ( "Connection to the server failed, all attempts exhausted." ) );
+    }
+
+    return returnStatus;
+}
+
 
 ```javascript
 
@@ -771,3 +824,22 @@ static SigV4CryptoInterface_t cryptoInterface =
         }
     }
 ```
+
+/**
+ * @brief Path of the file containing the server's root CA certificate.
+ *
+ * This certificate is used to identify the AWS IoT server and is publicly
+ * available. Refer to the AWS documentation available in the link below
+ * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
+ *
+ * Amazon's root CA certificate is automatically downloaded to the certificates
+ * directory from @ref https://www.amazontrust.com/repository/AmazonRootCA1.pem
+ * using the CMake build system.
+ *
+ * @note This certificate should be PEM-encoded.
+ * @note This path is relative from the demo binary created. Update
+ * ROOT_CA_CERT_PATH to the absolute path if this demo is executed from elsewhere.
+ */
+#ifndef ROOT_CA_CERT_PATH
+    #define ROOT_CA_CERT_PATH    "certificates/AmazonRootCA1.crt"
+#endif
