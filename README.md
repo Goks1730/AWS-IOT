@@ -306,7 +306,80 @@ Defining the endpoint, private key and the certificate.
     #endif
 ```
 ## handshake   
+```javascript
+    /**
+     * @brief Filepaths to certificates and private key that are used when
+     * performing the TLS handshake.
+     *
+     * @note These strings must be NULL-terminated because the OpenSSL API requires them to be.
+     */
+    const char * pRootCaPath;     /**< @brief Filepath string to the trusted server root CA. */
+    const char * pClientCertPath; /**< @brief Filepath string to the client certificate. */
+    const char * pPrivateKeyPath; /**< @brief Filepath string to the client certificate's private key. */
+} OpensslCredentials_t;
 
+static OpensslStatus_t tlsHandshake( const ServerInfo_t * pServerInfo,
+                                     OpensslParams_t * pOpensslParams,
+                                     const OpensslCredentials_t * pOpensslCredentials )
+{
+    OpensslStatus_t returnStatus = OPENSSL_SUCCESS;
+    int32_t sslStatus = -1, verifyPeerCertStatus = X509_V_OK;
+
+    /* Validate the hostname against the server's certificate. */
+    sslStatus = SSL_set1_host( pOpensslParams->pSsl, pServerInfo->pHostName );
+
+    if( sslStatus != 1 )
+    {
+        LogError( ( "SSL_set1_host failed to set the hostname to validate." ) );
+        returnStatus = OPENSSL_API_ERROR;
+    }
+
+    /* Enable SSL peer verification. */
+    if( returnStatus == OPENSSL_SUCCESS )
+    {
+        SSL_set_verify( pOpensslParams->pSsl, SSL_VERIFY_PEER, NULL );
+
+        /* Setup the socket to use for communication. */
+        sslStatus =
+            SSL_set_fd( pOpensslParams->pSsl, pOpensslParams->socketDescriptor );
+
+        if( sslStatus != 1 )
+        {
+            LogError( ( "SSL_set_fd failed to set the socket fd to SSL context." ) );
+            returnStatus = OPENSSL_API_ERROR;
+        }
+    }
+
+    /* Perform the TLS handshake. */
+    if( returnStatus == OPENSSL_SUCCESS )
+    {
+        setOptionalConfigurations( pOpensslParams->pSsl, pOpensslCredentials );
+
+        sslStatus = SSL_connect( pOpensslParams->pSsl );
+
+        if( sslStatus != 1 )
+        {
+            LogError( ( "SSL_connect failed to perform TLS handshake." ) );
+            returnStatus = OPENSSL_HANDSHAKE_FAILED;
+        }
+    }
+
+    /* Verify X509 certificate from peer. */
+    if( returnStatus == OPENSSL_SUCCESS )
+    {
+        verifyPeerCertStatus = ( int32_t ) SSL_get_verify_result( pOpensslParams->pSsl );
+
+        if( verifyPeerCertStatus != X509_V_OK )
+        {
+            LogError( ( "SSL_get_verify_result failed to verify X509 "
+                        "certificate from peer." ) );
+            returnStatus = OPENSSL_HANDSHAKE_FAILED;
+        }
+    }
+
+    return returnStatus;
+}
+```
 ## Wireshark is a network protocol analyzer, or an application that captures packets from a network connection, such as from your computer to your home office or the internet. 
 
 ```javascript
