@@ -80,7 +80,6 @@ Choose one MQTT client, in the Publish to a topic tab, in the Topic name field, 
 
 <img width="699" alt="5" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/c87f0cd9-250d-4d91-8f14-870805297de6">
 
-<img width="822" alt="4" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/b53acff6-0ab7-4b90-bd2a-c571ef8dddd4">
 
 
 
@@ -573,7 +572,8 @@ CK_RV PKCS11SignVerifyDemo( void )
                                            privateKeyHandle );
     }
   ```
-   <img width="950" alt="3" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/29cb984a-7f81-4f50-b9c7-9b407000bc35">
+  
+<img width="822" alt="4" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/b53acff6-0ab7-4b90-bd2a-c571ef8dddd4">
   
   ```javascript    
     /********************************* Verify **********************************/
