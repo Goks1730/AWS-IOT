@@ -402,6 +402,18 @@ Step 9: Once the SSL/TLS handshake and negotiation is done, the server and the c
 
 
 ## certificate signing request (CSR)
+A certificate signing request (CSR) is an encoded file. This information is used by a Certificate Authority (CA) to create an SSL/TLS certificate for your website to encrypt traffic to your site.
+## Public-Key Cryptography Standards 
+The sender encrypts, or scrambles, the data before sending it. The receiver decrypts, or unscrambles, the data after receiving it.
+## Elliptic Curve Digital Signature Algorithm
+Elliptic Curve Cryptography (ECC) is a newer algorithm that offers shorter keys that achieve comparable strengths when compared with longer RSA keys.
+Very fast key generation.
+Smaller keys, cipher-texts, and signatures.
+Fast signatures.
+Signatures can be computed in two stages, allowing latency much lower.
+Moderately fast encryption and decryption.
+Than inverse throughput.
+RSA allows you to secure messages before you send them. And the technique also lets you certify your notes, so recipients know they haven't been adjusted or altered while in transit. The RSA algorithm is one of the most widely used encryption tools
 ```javascript
 
 /**
