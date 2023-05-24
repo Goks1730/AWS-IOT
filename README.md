@@ -294,6 +294,7 @@ Defining the endpoint, private key and the certificate.
     #endif
 ```
 ## handshake   
+OpenSSL is an open-source command line tool that is commonly used to generate private keys, create CSRs, install your SSL/TLS certificate, and identify certificate information. 
 ```javascript
     /**
      * @brief Filepaths to certificates and private key that are used when
