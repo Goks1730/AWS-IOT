@@ -78,15 +78,6 @@ Choose one MQTT client, in the Publish to a topic tab, in the Topic name field, 
 <img width="728" alt="2" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/bf0974e9-8e5c-4b39-80f7-ec15dbbf1f89">
 
 
-<img width="699" alt="5" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/c87f0cd9-250d-4d91-8f14-870805297de6">
-
-
-
-
-
-
-
-
 # AWS-IOT
 
 
@@ -538,7 +529,10 @@ bool generateKeyAndCsr( CK_SESSION_HANDLE p11Session,
                         char * pCsrBuffer,
                         size_t csrBufferLength,
                         size_t * pOutCsrLength );
+```
+<img width="699" alt="5" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/c87f0cd9-250d-4d91-8f14-870805297de6">
 
+```javascript
 /**
  * @brief This function details how to use the PKCS #11 "Sign and Verify" functions to
  * create and interact with digital signatures.
