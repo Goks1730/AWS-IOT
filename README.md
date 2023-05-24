@@ -75,7 +75,16 @@ Choose one MQTT client, in the Publish to a topic tab, in the Topic name field, 
 <img width="823" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/4688d2a2-890c-4812-a481-c7acc4ca2eed">
 
 ## You should see output similar to the following:
-<img width="960" alt="1" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/7f9f6365-293b-4b60-8ca2-6bc5f19b360a">
+<img width="728" alt="2" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/bf0974e9-8e5c-4b39-80f7-ec15dbbf1f89">
+
+<img width="874" alt="6" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/fd36d1af-37cf-4a9f-b36e-a20c2331246d">
+
+<img width="699" alt="5" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/c87f0cd9-250d-4d91-8f14-870805297de6">
+
+<img width="822" alt="4" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/b53acff6-0ab7-4b90-bd2a-c571ef8dddd4">
+
+<img width="950" alt="3" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/29cb984a-7f81-4f50-b9c7-9b407000bc35">
+
 
 
 
