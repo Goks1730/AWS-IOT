@@ -817,7 +817,7 @@ static SigV4CryptoInterface_t cryptoInterface =
         }
     }
 ```
-
+```javascript
 /**
  * @brief Path of the file containing the server's root CA certificate.
  *
@@ -836,3 +836,4 @@ static SigV4CryptoInterface_t cryptoInterface =
 #ifndef ROOT_CA_CERT_PATH
     #define ROOT_CA_CERT_PATH    "certificates/AmazonRootCA1.crt"
 #endif
+```
