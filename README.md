@@ -276,6 +276,9 @@ bool generateCsrRequest( uint8_t * pBuffer,
                             FP_CBOR_CREATE_CERT_PUBLISH_TOPIC ) );
             }
         }
+  
+ A code signing certificate based on the SHA-256 ECDSA algorithm
+ 
 /**
  * @brief MbedTLS callback for signing using the provisioned private key. Used for
  * signing the CSR.
