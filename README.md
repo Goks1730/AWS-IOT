@@ -58,15 +58,14 @@ cd bin
 In the Subscribe to a topic tab, enter the topicName to subscribe to the topic on which your device publishes. 
 
 
-```bash
  <img width="736" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/049cc5b2-27e5-4022-ac40-8cdbe49be624">
-```
+
 
 The topic message log page,  opens and  appears in the Subscriptions list. If the device that you configured in Configure your device is running the example program, you should see the messages it sends to AWS IoT in the message log. The message log entries will appear below the Publish section when messages with the subscribed topic are received by AWS IoT.
 
-```bash
+
 <img width="737" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/439d3fcf-2efc-4753-9a83-f93891f9c271">
-```
+
 
 
 
