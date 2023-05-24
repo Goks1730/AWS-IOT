@@ -53,6 +53,18 @@ cd bin
 ./mqtt_demo_mutual_auth 
 ```
 
+## View MQTT messages with the AWS IoT MQTT client
+
+In the Subscribe to a topic tab, enter the topicName to subscribe to the topic on which your device publishes. 
+
+
+```bash
+ 
+```
+
+The topic message log page,  opens and  appears in the Subscriptions list. If the device that you configured in Configure your device is running the example program, you should see the messages it sends to AWS IoT in the message log. The message log entries will appear below the Publish section when messages with the subscribed topic are received by AWS IoT.
+
+
 
 
 
