@@ -68,8 +68,11 @@ The topic message log page,  opens and  appears in the Subscriptions list. If th
 
 Choose one MQTT client, in the Publish to a topic tab, in the Topic name field, enter the topicName of your message. In this example, testclient/example/topic. Try publishing the message a few times. From the Subscriptions list of both MQTT clients, you should be able to see that the clients receive the message. In this example, we publish the same message "Hello from AWS IoT console".
 
+## Subscribe to a topic
 <img width="827" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/90eac074-e501-464f-91a6-ece125812b66">
 
+## Publish to a topic
+<img width="823" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/4688d2a2-890c-4812-a481-c7acc4ca2eed">
 
 
 
