@@ -405,9 +405,8 @@ CK_RV PKCS11SignVerifyDemo( void )
     | Parameter | Description                |
 | :-------- | :------------------------- |
 | `Cryptoki` |  API to sign messages | 
-| Public Key Cryptography Standards Which specifies an API, called Cryptoki |
 | 'PKCS #11` |  Signing And Verifying A Signature | 
-    
+  Public Key Cryptography Standards Which specifies an API, called Cryptoki 
     
     
 
