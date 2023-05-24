@@ -74,6 +74,7 @@ Choose one MQTT client, in the Publish to a topic tab, in the Topic name field, 
 ## Publish to a topic
 <img width="823" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/4688d2a2-890c-4812-a481-c7acc4ca2eed">
 
+## You should see output similar to the following:
 
 
 
