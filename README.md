@@ -68,6 +68,7 @@ The topic message log page,  opens and  appears in the Subscriptions list. If th
 
 
 
+![image](https://github.com/Goks1730/AWS-IOT/assets/84590536/0d58c8a0-0e02-40f1-80c8-a8b325bd3f9d)
 
 
 
