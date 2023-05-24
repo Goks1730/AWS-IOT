@@ -238,7 +238,7 @@ Defining the endpoint, private key and the certificate.
 #endif /* ifndef CLIENT_USERNAME */
 ```
 ## connectToServer
-http
+```javascript
 /**
  * @brief Path of the file containing the client's private key.
  *
@@ -291,8 +291,6 @@ http
     return returnStatus;
 }
 
-
-```javascript
 
 /* Initialize information to connect to the MQTT broker. */
 
