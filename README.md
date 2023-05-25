@@ -293,6 +293,159 @@ Defining the endpoint, private key and the certificate.
         opensslCredentials.pPrivateKeyPath = CLIENT_PRIVATE_KEY_PATH;
     #endif
 ```
+## openssl
+```javascript
+/* OpenSSL sockets transport implementation. */
+
+#include "openssl_posix.h"
+
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    OpensslParams_t * pParams;
+};
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief The network context used for Openssl operation.
+ */
+static NetworkContext_t networkContext = { 0 };
+
+static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContext )
+{
+    bool returnStatus = false;
+    BackoffAlgorithmStatus_t backoffAlgStatus = BackoffAlgorithmSuccess;
+    OpensslStatus_t opensslStatus = OPENSSL_SUCCESS;
+    BackoffAlgorithmContext_t reconnectParams;
+    ServerInfo_t serverInfo;
+    OpensslCredentials_t opensslCredentials;
+    uint16_t nextRetryBackOff = 0U;
+    struct timespec tp;
+
+    /* Set the pParams member of the network context with desired transport. */
+    pNetworkContext->pParams = &opensslParams;
+
+    /* Initialize information to connect to the MQTT broker. */
+    serverInfo.pHostName = AWS_IOT_ENDPOINT;
+    serverInfo.hostNameLength = AWS_IOT_ENDPOINT_LENGTH;
+    serverInfo.port = AWS_MQTT_PORT;
+
+    /* Initialize credentials for establishing TLS session. */
+    ( void ) memset( &opensslCredentials, 0, sizeof( OpensslCredentials_t ) );
+    opensslCredentials.pRootCaPath = ROOT_CA_CERT_PATH;
+    opensslCredentials.pClientCertPath = CLIENT_CERT_PATH;
+    opensslCredentials.pPrivateKeyPath = CLIENT_PRIVATE_KEY_PATH;
+    opensslCredentials.sniHostName = AWS_IOT_ENDPOINT;
+
+
+        /* Establish a TLS session with the MQTT broker. This example connects
+         * to the MQTT broker as specified in AWS_IOT_ENDPOINT and AWS_MQTT_PORT
+         * at the demo config header. */
+        LogDebug( ( "Establishing a TLS session to %.*s:%d.",
+                    AWS_IOT_ENDPOINT_LENGTH,
+                    AWS_IOT_ENDPOINT,
+                    AWS_MQTT_PORT ) );
+        opensslStatus = Openssl_Connect( pNetworkContext,
+                                         &serverInfo,
+                                         &opensslCredentials,
+                                         TRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                         TRANSPORT_SEND_RECV_TIMEOUT_MS );
+
+        if( opensslStatus == OPENSSL_SUCCESS )
+        {
+            /* Connection successful. */
+            returnStatus = true;
+            
+        Greengrass creates a safe link to the cloud by enabling local device communications via the MQTT protocol.
+        
+        Greeengrass_auth.c(source file)
+        
+        
+        /* Initialize credentials for establishing TLS session. */
+    opensslCredentials.pRootCaPath = ROOT_CA_CERT_PATH;
+    opensslCredentials.pClientCertPath = CLIENT_CERT_PATH;
+    opensslCredentials.pPrivateKeyPath = CLIENT_PRIVATE_KEY_PATH;
+
+    /* Initialize reconnect attempts and interval */
+    BackoffAlgorithm_InitializeParams( &reconnectParams,
+                                       500U,  /* Backoff base ms */
+                                       5000U, /* Max backoff delay ms */
+                                       5U );  /* Max attempts */
+
+    /* Attempt to connect to the core's broker. If connection fails, retry after
+     * backoff period. */
+    do
+    {
+        LogInfo( ( "Establishing a TLS session to %.*s:%d.",
+                   GREENGRASS_ADDRESS_LENGTH,
+                   GREENGRASS_ADDRESS,
+                   MQTT_PORT ) );
+
+        opensslStatus = Openssl_Connect( pNetworkContext,
+                                         &serverInfo,
+                                         &opensslCredentials,
+                                         TRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                         TRANSPORT_SEND_RECV_TIMEOUT_MS );
+
+        if( opensslStatus == OPENSSL_SUCCESS )
+        {
+            /* Sends an MQTT Connect packet using the established TLS session,
+             * then waits for connection acknowledgment (CONNACK) packet. */
+            returnStatus = establishMqttSession( pMqttContext );
+
+            if( returnStatus == EXIT_FAILURE )
+            {
+                /* End TLS session, then close TCP connection. */
+                ( void ) Openssl_Disconnect( pNetworkContext );
+            }
+aws-iot-device-sdk-embedded-C-main\demos\greengrass\greengrass_demo_local_auth\openssl_posix.c
+/**
+ * @brief Passes TLS credentials to the OpenSSL library.
+ *
+ * Provides the root CA certificate, client certificate, and private key to the
+ * OpenSSL library. If the client certificate or private key is not NULL, mutual
+ * authentication is used when performing the TLS handshake.
+ *
+ * @param[out] pSslContext SSL context to which the credentials are to be
+ * imported.
+ * @param[in] pOpensslCredentials TLS credentials to be imported.
+ *
+ * @return 1 on success; -1, 0 on failure.
+ */
+static int32_t setCredentials( SSL_CTX * pSslContext,
+                               const OpensslCredentials_t * pOpensslCredentials );
+
+
+/**
+ * @brief Establish TLS session by performing handshake with the server.
+ *
+ * @param[in] pServerInfo Server connection info.
+ * @param[in] pOpensslParams Parameters to perform the TLS handshake.
+ * @param[in] pOpensslCredentials TLS credentials containing configurations.
+ *
+ * @return #OPENSSL_SUCCESS, #OPENSSL_API_ERROR, and #OPENSSL_HANDSHAKE_FAILED.
+ */
+static OpensslStatus_t tlsHandshake( const ServerInfo_t * pServerInfo,
+                                     OpensslParams_t * pOpensslParams,
+                                     const OpensslCredentials_t * pOpensslCredentials );
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## handshake   
 OpenSSL is an open-source command line tool that is commonly used to generate private keys, create CSRs, install your SSL/TLS certificate, and identify certificate information. 
 ```javascript
