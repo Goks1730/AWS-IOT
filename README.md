@@ -428,14 +428,74 @@ static int32_t setCredentials( SSL_CTX * pSslContext,
 static OpensslStatus_t tlsHandshake( const ServerInfo_t * pServerInfo,
                                      OpensslParams_t * pOpensslParams,
                                      const OpensslCredentials_t * pOpensslCredentials );
+                                     
+ * @param[in] pNetworkContext The network context created using Openssl_Connect API.
+ * @param[in] pBuffer Buffer containing the bytes to send over the network stack.
+ * @param[in] bytesToSend Number of bytes to send over the network.
+ *
+ * @return Number of bytes sent if successful; negative value on error.
+ *
+ * @note This function does not return zero value because it cannot be retried
+ * on send operation failure.
+ */
+int32_t Openssl_Send( NetworkContext_t * pNetworkContext,
+                      const void * pBuffer,
+                      size_t bytesToSend );
+                      
+   /**************************** Connect. ******************************/
+
+            /* Establish a TLS connection on top of TCP connection using OpenSSL. */
+
+            /* Attempt to connect to the HTTP server. If connection fails, retry
+             * after a timeout. The timeout value will be exponentially
+             * increased till the maximum attempts are reached or maximum
+             * timeout value is reached. The function returns EXIT_FAILURE if
+             * the TCP connection cannot be established to broker after
+             * the configured number of attempts. */
+            returnStatus = connectToServerWithBackoffRetries( connectToServer,
+                                                              &networkContext );
+
+            /* Define the transport interface. */
+            if( returnStatus == EXIT_SUCCESS )
+            {
+                transportInterface.recv = Openssl_Recv;
+                transportInterface.send = Openssl_Send;
+                transportInterface.pNetworkContext = &networkContext;
+            }
+
 ```
+## Generating a self-signed certificate using OpenSSL is a relatively simple process. The first step is to generate the key pair, which has a private key as well as a public key. This will be used to sign the certificate in Step 4. The second step is to extract the public key from the key pair. The third step is to generate a Certificate Signing Request (CSR). This will be used by the certificate authority (CA) to create the self-signed certificate. 
 
+Generate key pair
+Extract public key
+Generate csr file
+generate self sign certificate
 
+This command will generate an RSA key pair with a length of 2048.
+```bash
+ openssl genrsa -out private.key 2048
+```
+Extract the public key from the key pair
+Run this command to extract the public key from the key pair generated in step 1.
+```bash
+$ openssl rsa -in private.key -pubout -out public.key
+```
+<img width="473" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/19ecff90-2cb8-4a04-892f-c3f06ab05acd">
 
+Create a Certificate Signing Request (CSR)
+The next step is to generate a Certificate Signing Request (CSR). This will be used by the certificate authority (CA) to create the self-signed certificate. To generate the CSR, run this command in your terminal:
 
+```bash
+openssl req -new -key private.key -out certificate.csr
+```
+<img width="549" alt="image" src="https://github.com/Goks1730/AWS-IOT/assets/84590536/6817e986-7f56-49f9-a058-391325bc54b2">
 
+Create A Self-Signed Certificate Using Web-Based GUI OpenSSL
+Finally, generate the self-signed certificate using the private key and CSR. Run this command to generate the self-signed certificate on the terminal:
 
-
+```bash
+$ openssl x509 -in certificate.csr -out certificate.crt -req -signkey private.key -days 365
+```
 
 
 
